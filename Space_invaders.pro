@@ -25,14 +25,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++17
 
 SOURCES += \
-    main.cpp \
-    src/window.cpp \
+    main.cpp \    
     src/components.cpp \
     src/spaceinvaders.cpp \
    
 
-HEADERS += \
- inc/window.h \
+HEADERS += \ 
  inc/components.h \
  inc/settings.h \
  inc/spaceinvaders.h \

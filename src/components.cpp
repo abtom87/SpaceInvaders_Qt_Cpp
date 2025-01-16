@@ -71,7 +71,7 @@ CAlien::CAlien(EColor eColor, QGraphicsItem *pParent) : QGraphicsPixmapItem(pPar
     QTimer *pTimer = new QTimer(this);
 
     connect(pTimer, &QTimer::timeout, this, &CAlien::onMove);
-    pTimer->start(gAlienSpeed);
+    pTimer->start(g_vars::gAlienSpeed);
 }
 
 EColor CAlien::GetColor() const
@@ -120,7 +120,7 @@ void CAlien::onMove()
 {
     setPos(x(), y() + 5);
 
-    if (pos().y() >= (scene()->height() - gCannonSize.height()))
+    if (pos().y() >= (scene()->height() - g_vars::gCannonSize.height()))
     {
         scene()->removeItem(this);
         emit sigDecreaseHealth();
@@ -145,7 +145,7 @@ CBullet::CBullet(EColor eColor, QGraphicsItem *pParent) : QGraphicsPixmapItem(pP
     QTimer *pTimer = new QTimer(this);
 
     connect(pTimer, &QTimer::timeout, this, &CBullet::onMove);
-    pTimer->start(gBulletSpeed);
+    pTimer->start(g_vars::gBulletSpeed);
 }
 
 EColor CBullet::GetColor() const
@@ -272,6 +272,6 @@ int CPoints::GetScore() const
 void CPoints::Reset()
 {
     m_nScore = 0;
-    m_Health = gMaxHealth;
+    m_Health = g_vars::gMaxHealth;
     setPlainText(QString("Health: ") + QString::number(m_Health) + "\n" + QString("Score: ") + QString::number(m_nScore));
 }

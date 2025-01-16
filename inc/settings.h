@@ -2,8 +2,16 @@
 
 #include <QSize>
 
-QSize const gCannonSize = QSize(100, 100);
+namespace g_vars
+{
 
-constexpr int gBulletSpeed = 7;
-constexpr int gAlienSpeed = 50;
-constexpr int gMaxHealth = 3;
+    constexpr QSize gCannonSize = QSize(150, 150);
+
+    constexpr int gBulletSpeed = 7;
+
+    constexpr int gMaxHealth = 3;
+    constexpr int gAlienSpeed = 50;
+
+    const QString gParFolderPath = "../Resources/";
+
+}

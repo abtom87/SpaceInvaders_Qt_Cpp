@@ -20,8 +20,9 @@ void CSpaceInvaders::Run()
     scene()->clear();
     setCursor(Qt::BlankCursor);
 
-    m_pCannon = new CCannon(EColor::Pink);
-    m_pCannon->setPos(m_oScreenSize.width() / 2, m_oScreenSize.height() - gCannonSize.height());
+    m_pCannon = new CCannon(EColor::Red);
+
+    m_pCannon->setPos(m_oScreenSize.width() / 2, m_oScreenSize.height() - g_vars::gCannonSize.height());
     m_pCannon->setFlag(QGraphicsItem::ItemIsFocusable);
     m_pCannon->setFocus();
 
@@ -60,13 +61,13 @@ void CSpaceInvaders::keyPressEvent(QKeyEvent *pEvent)
 
     case Qt::Key_Left:
         if (m_pCannon->pos().x() > 0)
-            m_pCannon->setPos(m_pCannon->x() - 40, m_pCannon->y());
+            m_pCannon->setPos(m_pCannon->x() - 60, m_pCannon->y());
 
         break;
 
     case Qt::Key_Right:
-        if ((m_pCannon->pos().x() + gCannonSize.width()) < m_oScreenSize.width())
-            m_pCannon->setPos(m_pCannon->x() + 40, m_pCannon->y());
+        if ((m_pCannon->pos().x() + g_vars::gCannonSize.width()) < m_oScreenSize.width())
+            m_pCannon->setPos(m_pCannon->x() + 60, m_pCannon->y());
 
         break;
 
@@ -109,12 +110,12 @@ void CSpaceInvaders::onDecreaseHealth()
 
 void CSpaceInvaders::onGameOver()
 {
-    close();
+    this->close();
 }
 
 void CSpaceInvaders::onCreateEnemy()
 {
-
+    srand(time(NULL));
     int nPos = 100 + (rand() % m_oScreenSize.width() - 100);
     int nColor = rand() % 3;
 

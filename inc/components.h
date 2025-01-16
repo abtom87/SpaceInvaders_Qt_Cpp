@@ -33,10 +33,9 @@ signals:
 private:
     EColor m_eColor;
 
-    QString m_parentFolder = "../Resources/";
-    QString m_Path_RedCannon = m_parentFolder + "RedCannon.png";
-    QString m_Path_PinkCannon = m_parentFolder + "PinkCannon.png";
-    QString m_Path_BlueCannon = m_parentFolder + "BlueCannon.png";
+    QString m_Path_RedCannon = g_vars::gParFolderPath + "RedCannon.png";
+    QString m_Path_PinkCannon = g_vars::gParFolderPath + "PinkCannon.png";
+    QString m_Path_BlueCannon = g_vars::gParFolderPath + "BlueCannon.png";
 };
 
 /************************************************** Component ALIEN ************************************************** */
@@ -62,9 +61,9 @@ public slots:
 private:
     EColor m_eColor;
 
-    QString m_Path_RedAlien = "../Resources/RedAlien.png";
-    QString m_Path_PinkAlien = "../Resources/PinkAlien.png";
-    QString m_Path_BlueAlien = "../Resources/BlueAlien.png";
+    QString m_Path_RedAlien = g_vars::gParFolderPath + "RedAlien.png";
+    QString m_Path_PinkAlien = g_vars::gParFolderPath + "PinkAlien.png";
+    QString m_Path_BlueAlien = g_vars::gParFolderPath + "BlueAlien.png";
 };
 
 /************************************************** Component BULLET ************************************************** */
@@ -89,9 +88,9 @@ public slots:
 private:
     EColor m_eColor;
 
-    QString m_Path_RedBullet = "../Resources/RedBullet.png";
-    QString m_Path_PinkBullet = "../Resources/PinkBullet.png";
-    QString m_Path_BlueBullet = "../Resources/BlueBullet.png";
+    QString m_Path_RedBullet = g_vars::gParFolderPath + "RedBullet.png";
+    QString m_Path_PinkBullet = g_vars::gParFolderPath + "PinkBullet.png";
+    QString m_Path_BlueBullet = g_vars::gParFolderPath + "BlueBullet.png";
 };
 class CBullet;
 
@@ -110,6 +109,6 @@ public:
     void Reset();
 
 private:
-    int m_Health = gMaxHealth;
+    int m_Health = g_vars::gMaxHealth;
     int m_nScore = 0;
 };
