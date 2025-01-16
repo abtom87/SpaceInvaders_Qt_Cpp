@@ -36,7 +36,7 @@ void CSpaceInvaders::Run()
 
     QTimer *pTimer = new QTimer(this);
     connect(pTimer, &QTimer::timeout, this, &CSpaceInvaders::onCreateEnemy);
-    pTimer->start(2000);
+    pTimer->start(1500);
 }
 
 void CSpaceInvaders::CheckPoints()
@@ -116,7 +116,13 @@ void CSpaceInvaders::onGameOver()
 void CSpaceInvaders::onCreateEnemy()
 {
     srand(time(NULL));
-    int nPos = 100 + (rand() % m_oScreenSize.width() - 100);
+
+    int nPos = (rand() % m_oScreenSize.width()) - g_vars::gCannonSize.width();
+    if (nPos < 0)
+      nPos = 0;
+
+    srand(time(NULL));
+
     int nColor = rand() % 3;
 
     CAlien *pAlien = new CAlien(static_cast<EColor>(nColor));
