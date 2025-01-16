@@ -32,9 +32,11 @@ signals:
 
 private:
     EColor m_eColor;
-    QString m_Path_RedCannon = "../Resources/RedCannon.png";
-    QString m_Path_PinkCannon = "../Resources/PinkCannon.png";
-    QString m_Path_BlueCannon = "../Resources/BlueCannon.png";
+
+    QString m_parentFolder = "../Resources/";
+    QString m_Path_RedCannon = m_parentFolder + "RedCannon.png";
+    QString m_Path_PinkCannon = m_parentFolder + "PinkCannon.png";
+    QString m_Path_BlueCannon = m_parentFolder + "BlueCannon.png";
 };
 
 /************************************************** Component ALIEN ************************************************** */
@@ -60,7 +62,7 @@ public slots:
 private:
     EColor m_eColor;
 
-    QString m_Path_RedAlien = "../Resources/RedCannon.png";
+    QString m_Path_RedAlien = "../Resources/RedAlien.png";
     QString m_Path_PinkAlien = "../Resources/PinkAlien.png";
     QString m_Path_BlueAlien = "../Resources/BlueAlien.png";
 };

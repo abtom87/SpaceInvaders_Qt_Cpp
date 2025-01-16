@@ -116,15 +116,6 @@ void CAlien::SetColor(EColor ecol)
     }
 }
 
-/*
-void CAlien::sigGameOver()
-{
-}
-
-void CAlien::sigDecreaseHealth()
-{
-}*/
-
 void CAlien::onMove()
 {
     setPos(x(), y() + 5);
