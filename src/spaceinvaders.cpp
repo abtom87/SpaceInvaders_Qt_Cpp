@@ -24,7 +24,6 @@ void CSpaceInvaders::Run() {
   scene()->clear();
   setCursor(Qt::BlankCursor);
 
-  // m_pCannon = new CCannon(EColor::Red);
   m_pCannon = std::make_unique<CCannon>(EColor::Red);
 
   m_pCannon->setPos(m_oScreenSize.width() / 2,
@@ -39,7 +38,6 @@ void CSpaceInvaders::Run() {
   connect(m_pCannon.get(), &CCannon::sigDecreaseScore, this,
           &CSpaceInvaders::onDecreaseScore);
 
-  // m_pPoints = new CPoints();
   m_pPoints = std::make_unique<CPoints>();
   scene()->addItem(m_pPoints.get());
 
@@ -127,8 +125,8 @@ void CSpaceInvaders::startTimer(uint16_t milliseconds) {
 void CSpaceInvaders::stopTimer() { m_pSp_InvTimer->stop(); }
 
 void CSpaceInvaders::onLaunchEnemy() {
-  srand(time(NULL));
 
+  srand(time(NULL));
   int nPos = (rand() % m_oScreenSize.width()) - g_vars::gCannonSize.width();
   if (nPos < 0)
     nPos = 0;
@@ -137,7 +135,7 @@ void CSpaceInvaders::onLaunchEnemy() {
 
   int nColor = rand() % 3;
 
-  CAlien *pAlien = new CAlien(static_cast<EColor>(nColor));
+  CAlien *pAlien = new CAlien(static_cast<EColor>(nColor)); // FIXME
 
   pAlien->setPos(nPos, 0);
 

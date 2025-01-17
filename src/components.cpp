@@ -7,19 +7,42 @@
 CCannon::CCannon(EColor color, QGraphicsItem *pParent)
     : QGraphicsPixmapItem(pParent) {
   SetColor(color);
-  pBullet = std::make_unique<CBullet>(color);
+
+  // FIXME
+  m_pUpdateBulletsTimer = new QTimer();
+
+  // std::make_unique<QTimer>();
+
+  connect(m_pUpdateBulletsTimer, &QTimer::timeout, this,
+          &CCannon::updateBullets);
+  m_pUpdateBulletsTimer->start(50);
+}
+
+void CCannon::updateBullets() {
+  // Delete bullet in vector if marked for deletion
+  for (auto it = m_Bullets.begin(); it != m_Bullets.end();) {
+    if ((*it)->IsMarkedForDeletion()) {
+      it = m_Bullets.erase(it); // Erase returns the next valid iterator
+    } else {
+      ++it; // Move to the next element
+    }
+  }
 }
 
 void CCannon::Shoot() {
-  //  CBullet *pBullet = new CBullet(m_eColor);
+
+  auto pBullet = std::make_unique<CBullet>(m_eColor);
 
   connect(pBullet.get(), &CBullet::sigIncreaseScore, this,
           &CCannon::sigIncreaseScore);
   connect(pBullet.get(), &CBullet::sigDecreaseScore, this,
           &CCannon::sigDecreaseScore);
 
-  pBullet.get()->setPos(x() + 15, y() - 10);
+  pBullet->setPos(x() + 15, y() - 10);
   scene()->addItem(pBullet.get());
+
+  // Collect bullet in vector of bullets
+  m_Bullets.push_back(std::move(pBullet));
 }
 
 EColor CCannon::GetColor() const { return m_eColor; }
@@ -119,7 +142,9 @@ void CAlien::onMove() {
 
 CBullet::CBullet(EColor eColor, QGraphicsItem *pParent)
     : QGraphicsPixmapItem(pParent) {
+
   SetColor(eColor);
+  m_markedForDeletion = false;
 
   m_pBulletTimer = std::make_unique<QTimer>();
 
@@ -127,6 +152,8 @@ CBullet::CBullet(EColor eColor, QGraphicsItem *pParent)
 
   startTimer(g_vars::gBulletSpeed);
 }
+
+bool CBullet::IsMarkedForDeletion() { return m_markedForDeletion; }
 
 void CBullet::startTimer(uint16_t bulletSpeed) {
   m_pBulletTimer->start(bulletSpeed);
@@ -172,27 +199,20 @@ void CBullet::onMove() {
 
   QList<QGraphicsItem *> lstCollidingItems = collidingItems();
 
-  // If bullet collides with aline, remove bullet and alien from scene.
   for (auto const pItem : lstCollidingItems) {
-
     CAlien *pAlien = dynamic_cast<CAlien *>(pItem);
     if (pAlien != nullptr) {
-
       if (pAlien->GetColor() == GetColor()) {
-
         scene()->removeItem(pAlien);
-        scene()->removeItem(this);
-
         emit sigIncreaseScore();
-
-        delete pAlien;
-
-        delete this;
+        pAlien->deleteLater(); // Mark alien for deletion
       } else {
-        emit sigDecreaseScore();
-        scene()->removeItem(this);
-        delete this;
+        if (!m_markedForDeletion) {
+
+          emit sigDecreaseScore();
+        }
       }
+      m_markedForDeletion = true; // Mark this bullet for deletion
       return;
     }
   }
@@ -200,8 +220,7 @@ void CBullet::onMove() {
   setPos(x(), y() - g_vars::gBulletDistance);
 
   if (pos().y() < 0) {
-    scene()->removeItem(this);
-    delete this;
+    m_markedForDeletion = true; // Mark this bullet for deletion
   }
 }
 

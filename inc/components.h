@@ -25,13 +25,19 @@ signals:
   void sigIncreaseScore();
   void sigDecreaseScore();
 
+public slots:
+  void updateBullets();
+
 private:
   EColor m_eColor;
 
   QString m_Path_RedCannon = g_vars::gParFolderPath + "RedCannon.png";
   QString m_Path_PinkCannon = g_vars::gParFolderPath + "PinkCannon.png";
   QString m_Path_BlueCannon = g_vars::gParFolderPath + "BlueCannon.png";
-  std::unique_ptr<CBullet> pBullet;
+
+  // std::unique_ptr<QTimer> m_pUpdateBulletsTimer;
+  QTimer *m_pUpdateBulletsTimer = nullptr;
+  std::vector<std::unique_ptr<CBullet>> m_Bullets; // Store all bullets
 };
 
 /************************************************** Component ALIEN
@@ -77,6 +83,7 @@ public:
   ~CBullet();
   EColor GetColor() const;
   void SetColor(EColor ecol);
+  bool IsMarkedForDeletion();
 
 signals:
   void sigIncreaseScore();
@@ -93,6 +100,8 @@ private:
   QString m_Path_BlueBullet = g_vars::gParFolderPath + "BlueBullet.png";
 
   std::unique_ptr<QTimer> m_pBulletTimer;
+
+  bool m_markedForDeletion;
 
   void startTimer(uint16_t bulletSpeed);
   void stopTimer();

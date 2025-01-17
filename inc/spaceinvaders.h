@@ -32,8 +32,6 @@ private:
   std::unique_ptr<CCannon> m_pCannon;
   std::unique_ptr<CPoints> m_pPoints;
 
-  // CCannon *m_pCannon = nullptr;
-  // CPoints *m_pPoints = nullptr;
   QSize m_oScreenSize;
   QString m_bg_image = g_vars::gParFolderPath + "SpaceInvadersBg.jpg";
   QString m_gameOver_image = g_vars::gParFolderPath + "gameOver.png";
