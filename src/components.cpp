@@ -7,17 +7,19 @@
 CCannon::CCannon(EColor color, QGraphicsItem *pParent)
     : QGraphicsPixmapItem(pParent) {
   SetColor(color);
+  pBullet = std::make_unique<CBullet>(color);
 }
 
 void CCannon::Shoot() {
-  CBullet *pBullet = new CBullet(m_eColor);
-  connect(pBullet, &CBullet::sigIncreaseScore, this,
+  //  CBullet *pBullet = new CBullet(m_eColor);
+
+  connect(pBullet.get(), &CBullet::sigIncreaseScore, this,
           &CCannon::sigIncreaseScore);
-  connect(pBullet, &CBullet::sigDecreaseScore, this,
+  connect(pBullet.get(), &CBullet::sigDecreaseScore, this,
           &CCannon::sigDecreaseScore);
 
-  pBullet->setPos(x() + 15, y() - 10);
-  scene()->addItem(pBullet);
+  pBullet.get()->setPos(x() + 15, y() - 10);
+  scene()->addItem(pBullet.get());
 }
 
 EColor CCannon::GetColor() const { return m_eColor; }
@@ -56,14 +58,14 @@ CAlien::CAlien(EColor eColor, QGraphicsItem *pParent)
     : QGraphicsPixmapItem(pParent) {
   SetColor(eColor);
 
-  m_pTimer = new QTimer();
+  m_pAlienTimer = std::make_unique<QTimer>();
 
-  connect(m_pTimer, &QTimer::timeout, this, &CAlien::onMove);
-  m_pTimer->start(g_vars::gAlienSpeed);
+  connect(m_pAlienTimer.get(), &QTimer::timeout, this, &CAlien::onMove);
+  m_pAlienTimer->start(g_vars::gAlienSpeed);
 }
 CAlien::~CAlien() {
-  m_pTimer->stop();
-  delete m_pTimer;
+  m_pAlienTimer->stop();
+  m_pAlienTimer.reset();
 }
 
 EColor CAlien::GetColor() const { return m_eColor; }
@@ -119,21 +121,23 @@ CBullet::CBullet(EColor eColor, QGraphicsItem *pParent)
     : QGraphicsPixmapItem(pParent) {
   SetColor(eColor);
 
-  m_pTimer = new QTimer();
+  m_pBulletTimer = std::make_unique<QTimer>();
 
-  connect(m_pTimer, &QTimer::timeout, this, &CBullet::onMove);
+  connect(m_pBulletTimer.get(), &QTimer::timeout, this, &CBullet::onMove);
 
   startTimer(g_vars::gBulletSpeed);
 }
 
-void CBullet::startTimer(uint16_t bulletSpeed) { m_pTimer->start(bulletSpeed); }
+void CBullet::startTimer(uint16_t bulletSpeed) {
+  m_pBulletTimer->start(bulletSpeed);
+}
 
-void CBullet::stopTimer(void) { m_pTimer->stop(); }
+void CBullet::stopTimer(void) { m_pBulletTimer->stop(); }
 
 CBullet::~CBullet() {
 
   stopTimer();
-  delete m_pTimer;
+  m_pBulletTimer.reset();
 }
 
 EColor CBullet::GetColor() const { return m_eColor; }
@@ -182,6 +186,7 @@ void CBullet::onMove() {
         emit sigIncreaseScore();
 
         delete pAlien;
+
         delete this;
       } else {
         emit sigDecreaseScore();

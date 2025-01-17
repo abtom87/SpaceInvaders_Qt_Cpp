@@ -8,6 +8,7 @@
 #include "settings.h"
 
 enum class EColor { Red, Pink, Blue };
+class CBullet;
 
 class CCannon : public QObject, public QGraphicsPixmapItem {
   Q_OBJECT
@@ -30,6 +31,7 @@ private:
   QString m_Path_RedCannon = g_vars::gParFolderPath + "RedCannon.png";
   QString m_Path_PinkCannon = g_vars::gParFolderPath + "PinkCannon.png";
   QString m_Path_BlueCannon = g_vars::gParFolderPath + "BlueCannon.png";
+  std::unique_ptr<CBullet> pBullet;
 };
 
 /************************************************** Component ALIEN
@@ -59,7 +61,8 @@ private:
   QString m_Path_RedAlien = g_vars::gParFolderPath + "RedAlien.png";
   QString m_Path_PinkAlien = g_vars::gParFolderPath + "PinkAlien.png";
   QString m_Path_BlueAlien = g_vars::gParFolderPath + "BlueAlien.png";
-  QTimer *m_pTimer = nullptr;
+
+  std::unique_ptr<QTimer> m_pAlienTimer;
 };
 
 /************************************************** Component BULLET
@@ -88,11 +91,12 @@ private:
   QString m_Path_RedBullet = g_vars::gParFolderPath + "RedBullet.png";
   QString m_Path_PinkBullet = g_vars::gParFolderPath + "PinkBullet.png";
   QString m_Path_BlueBullet = g_vars::gParFolderPath + "BlueBullet.png";
-  QTimer *m_pTimer = nullptr;
+
+  std::unique_ptr<QTimer> m_pBulletTimer;
+
   void startTimer(uint16_t bulletSpeed);
   void stopTimer();
 };
-class CBullet;
 
 /************************************************** Component Points
  * ************************************************** */
