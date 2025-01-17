@@ -1,114 +1,114 @@
 #pragma once
 
+#include <QGraphicsItem>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSimpleTextItem>
-#include <QGraphicsItem>
 #include <QKeyEvent>
 
 #include "settings.h"
 
-enum class EColor
-{
-    Red,
-    Pink,
-    Blue
-};
+enum class EColor { Red, Pink, Blue };
 
-class CCannon : public QObject, public QGraphicsPixmapItem
-{
-    Q_OBJECT
+class CCannon : public QObject, public QGraphicsPixmapItem {
+  Q_OBJECT
 
 public:
-    CCannon(EColor color, QGraphicsItem *pParent = nullptr);
+  CCannon(EColor color, QGraphicsItem *pParent = nullptr);
 
-    void Shoot();
+  void Shoot();
 
-    EColor GetColor() const;
-    void SetColor(EColor ecol);
+  EColor GetColor() const;
+  void SetColor(EColor ecol);
 
 signals:
-    void sigIncreaseScore();
-    void sigDecreaseScore();
+  void sigIncreaseScore();
+  void sigDecreaseScore();
 
 private:
-    EColor m_eColor;
+  EColor m_eColor;
 
-    QString m_Path_RedCannon = g_vars::gParFolderPath + "RedCannon.png";
-    QString m_Path_PinkCannon = g_vars::gParFolderPath + "PinkCannon.png";
-    QString m_Path_BlueCannon = g_vars::gParFolderPath + "BlueCannon.png";
+  QString m_Path_RedCannon = g_vars::gParFolderPath + "RedCannon.png";
+  QString m_Path_PinkCannon = g_vars::gParFolderPath + "PinkCannon.png";
+  QString m_Path_BlueCannon = g_vars::gParFolderPath + "BlueCannon.png";
 };
 
-/************************************************** Component ALIEN ************************************************** */
+/************************************************** Component ALIEN
+ * ************************************************** */
 
-class CAlien : public QObject, public QGraphicsPixmapItem
-{
+class CAlien : public QObject, public QGraphicsPixmapItem {
 
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    CAlien(EColor EColor, QGraphicsItem *pParent = nullptr);
+  CAlien(EColor EColor, QGraphicsItem *pParent = nullptr);
+  ~CAlien();
 
-    EColor GetColor() const;
-    void SetColor(EColor ecol);
+  EColor GetColor() const;
+  void SetColor(EColor ecol);
 
 signals:
-    void sigGameOver();
-    void sigDecreaseHealth();
+  void sigGameOver();
+  void sigDecreaseHealth();
 
 public slots:
-    void onMove();
+  void onMove();
 
 private:
-    EColor m_eColor;
+  EColor m_eColor;
 
-    QString m_Path_RedAlien = g_vars::gParFolderPath + "RedAlien.png";
-    QString m_Path_PinkAlien = g_vars::gParFolderPath + "PinkAlien.png";
-    QString m_Path_BlueAlien = g_vars::gParFolderPath + "BlueAlien.png";
+  QString m_Path_RedAlien = g_vars::gParFolderPath + "RedAlien.png";
+  QString m_Path_PinkAlien = g_vars::gParFolderPath + "PinkAlien.png";
+  QString m_Path_BlueAlien = g_vars::gParFolderPath + "BlueAlien.png";
+  QTimer *m_pTimer = nullptr;
 };
 
-/************************************************** Component BULLET ************************************************** */
+/************************************************** Component BULLET
+ * ************************************************** */
 
-class CBullet : public QObject, public QGraphicsPixmapItem
-{
+class CBullet : public QObject, public QGraphicsPixmapItem {
 
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    CBullet(EColor eColor, QGraphicsItem *pParent = nullptr);
-    EColor GetColor() const;
-    void SetColor(EColor ecol);
+  CBullet(EColor eColor, QGraphicsItem *pParent = nullptr);
+  ~CBullet();
+  EColor GetColor() const;
+  void SetColor(EColor ecol);
 
 signals:
-    void sigIncreaseScore();
-    void sigDecreaseScore();
+  void sigIncreaseScore();
+  void sigDecreaseScore();
 
 public slots:
-    void onMove();
+  void onMove();
 
 private:
-    EColor m_eColor;
+  EColor m_eColor;
 
-    QString m_Path_RedBullet = g_vars::gParFolderPath + "RedBullet.png";
-    QString m_Path_PinkBullet = g_vars::gParFolderPath + "PinkBullet.png";
-    QString m_Path_BlueBullet = g_vars::gParFolderPath + "BlueBullet.png";
+  QString m_Path_RedBullet = g_vars::gParFolderPath + "RedBullet.png";
+  QString m_Path_PinkBullet = g_vars::gParFolderPath + "PinkBullet.png";
+  QString m_Path_BlueBullet = g_vars::gParFolderPath + "BlueBullet.png";
+  QTimer *m_pTimer = nullptr;
+  void startTimer(uint16_t bulletSpeed);
+  void stopTimer();
 };
 class CBullet;
 
-/************************************************** Component Points ************************************************** */
-class CPoints : public QGraphicsTextItem
-{
+/************************************************** Component Points
+ * ************************************************** */
+class CPoints : public QGraphicsTextItem {
 public:
-    CPoints(QGraphicsTextItem *pParent = nullptr);
+  CPoints(QGraphicsTextItem *pParent = nullptr);
 
-    void IncreaseScore();
-    void DecreaseScore();
-    void DecreaseHealth();
+  void IncreaseScore();
+  void DecreaseScore();
+  void DecreaseHealth();
 
-    int GetHealth() const;
-    int GetScore() const;
-    void Reset();
+  int GetHealth() const;
+  int GetScore() const;
+  void Reset();
 
 private:
-    int m_Health = g_vars::gMaxHealth;
-    int m_nScore = 0;
+  int m_Health = g_vars::gMaxHealth;
+  int m_nScore = 0;
 };
