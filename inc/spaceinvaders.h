@@ -31,13 +31,15 @@ public slots:
 private:
   std::unique_ptr<CCannon> m_pCannon;
   std::unique_ptr<CPoints> m_pPoints;
+  std::unique_ptr<QTimer> m_pSp_InvTimer;
+  std::unique_ptr<CAlien> m_pAlien;
+
+  bool m_gameOver;
 
   QSize m_oScreenSize;
   QString m_bg_image = g_vars::gParFolderPath + "SpaceInvadersBg.jpg";
   QString m_gameOver_image = g_vars::gParFolderPath + "gameOver.png";
   QString m_borderStyle = "border-style:none";
-
-  std::unique_ptr<QTimer> m_pSp_InvTimer;
 
   void startTimer(uint16_t milliseconds);
   void stopTimer();

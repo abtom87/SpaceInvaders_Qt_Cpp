@@ -18,6 +18,8 @@ CSpaceInvaders::CSpaceInvaders(QSize oScreenSize, QWidget *pParent)
   m_pSp_InvTimer = std::make_unique<QTimer>();
   connect(m_pSp_InvTimer.get(), &QTimer::timeout, this,
           &CSpaceInvaders::onLaunchEnemy);
+
+  m_gameOver = false;
 }
 
 void CSpaceInvaders::Run() {
@@ -85,8 +87,14 @@ void CSpaceInvaders::keyPressEvent(QKeyEvent *pEvent) {
 
     break;
 
-    // default:
-    //   break;
+  case Qt::Key_Q:
+    if (m_gameOver) {
+      close();
+    }
+    break;
+
+  default:
+    break;
   }
 }
 
@@ -102,6 +110,7 @@ void CSpaceInvaders::onDecreaseScore() {
 }
 
 void CSpaceInvaders::onDecreaseHealth() {
+
   m_pPoints->DecreaseHealth();
   CheckPoints();
 }
@@ -116,6 +125,7 @@ void CSpaceInvaders::onGameOver() {
   this->stopTimer();
 
   setBackgroundBrush(QBrush(QImage(m_gameOver_image)));
+  m_gameOver = true;
 }
 
 void CSpaceInvaders::startTimer(uint16_t milliseconds) {
@@ -135,14 +145,15 @@ void CSpaceInvaders::onLaunchEnemy() {
 
   int nColor = rand() % 3;
 
-  CAlien *pAlien = new CAlien(static_cast<EColor>(nColor)); // FIXME
+  m_pAlien = std::make_unique<CAlien>(static_cast<EColor>(nColor));
+  m_pAlien->setPos(nPos, 0);
 
-  pAlien->setPos(nPos, 0);
-
-  scene()->addItem(pAlien);
-  connect(pAlien, &CAlien::sigGameOver, this, &CSpaceInvaders::onGameOver);
-  connect(pAlien, &CAlien::sigDecreaseHealth, this,
+  connect(m_pAlien.get(), &CAlien::sigGameOver, this,
+          &CSpaceInvaders::onGameOver);
+  connect(m_pAlien.get(), &CAlien::sigDecreaseHealth, this,
           &CSpaceInvaders::onDecreaseHealth);
+
+  scene()->addItem(m_pAlien.release());
 }
 
 CSpaceInvaders::~CSpaceInvaders() {

@@ -1,5 +1,6 @@
 #include "inc/components.h"
 
+#include <QDebug>
 #include <QGraphicsScene>
 #include <QTimer>
 #include <iostream>
@@ -124,9 +125,10 @@ void CAlien::onMove() {
   setPos(x(), y() + 5);
 
   if (pos().y() >= (scene()->height() - g_vars::gCannonSize.height())) {
+
     scene()->removeItem(this);
     emit sigDecreaseHealth();
-    delete this;
+    deleteLater();
   }
 
   QList<QGraphicsItem *> lstCollidingItems = collidingItems();
