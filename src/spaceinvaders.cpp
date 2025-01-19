@@ -15,33 +15,36 @@ CSpaceInvaders::CSpaceInvaders(QSize oScreenSize, QWidget *pParent)
   setCursor(Qt::PointingHandCursor);
   setStyleSheet(m_borderStyle);
 
-  m_pTimer = new QTimer();
-  connect(m_pTimer, &QTimer::timeout, this, &CSpaceInvaders::onLaunchEnemy);
+  m_pSp_InvTimer = std::make_unique<QTimer>();
+  connect(m_pSp_InvTimer.get(), &QTimer::timeout, this,
+          &CSpaceInvaders::onLaunchEnemy);
+
+  m_gameOver = false;
 }
 
 void CSpaceInvaders::Run() {
   scene()->clear();
   setCursor(Qt::BlankCursor);
 
-  m_pCannon = new CCannon(EColor::Red);
+  m_pCannon = std::make_unique<CCannon>(EColor::Red);
 
   m_pCannon->setPos(m_oScreenSize.width() / 2,
                     m_oScreenSize.height() - g_vars::gCannonSize.height());
   m_pCannon->setFlag(QGraphicsItem::ItemIsFocusable);
   m_pCannon->setFocus();
 
-  scene()->addItem(m_pCannon);
+  scene()->addItem(m_pCannon.get());
 
-  connect(m_pCannon, &CCannon::sigIncreaseScore, this,
+  connect(m_pCannon.get(), &CCannon::sigIncreaseScore, this,
           &CSpaceInvaders::onIncreaseScore);
-  connect(m_pCannon, &CCannon::sigDecreaseScore, this,
+  connect(m_pCannon.get(), &CCannon::sigDecreaseScore, this,
           &CSpaceInvaders::onDecreaseScore);
 
-  m_pPoints = new CPoints();
-  scene()->addItem(m_pPoints);
+  m_pPoints = std::make_unique<CPoints>();
+  scene()->addItem(m_pPoints.get());
 
   // The function connected with timer(createEnemy) is called every 1.5 seconds
-  startTimer(1500);
+  startTimer(1200);
 }
 
 void CSpaceInvaders::CheckPoints() {
@@ -84,8 +87,14 @@ void CSpaceInvaders::keyPressEvent(QKeyEvent *pEvent) {
 
     break;
 
-    // default:
-    //   break;
+  case Qt::Key_Q:
+    if (m_gameOver) {
+      close();
+    }
+    break;
+
+  default:
+    break;
   }
 }
 
@@ -101,6 +110,7 @@ void CSpaceInvaders::onDecreaseScore() {
 }
 
 void CSpaceInvaders::onDecreaseHealth() {
+
   m_pPoints->DecreaseHealth();
   CheckPoints();
 }
@@ -115,17 +125,18 @@ void CSpaceInvaders::onGameOver() {
   this->stopTimer();
 
   setBackgroundBrush(QBrush(QImage(m_gameOver_image)));
+  m_gameOver = true;
 }
 
 void CSpaceInvaders::startTimer(uint16_t milliseconds) {
-  m_pTimer->start(milliseconds);
+  m_pSp_InvTimer->start(milliseconds);
 }
 
-void CSpaceInvaders::stopTimer() { m_pTimer->stop(); }
+void CSpaceInvaders::stopTimer() { m_pSp_InvTimer->stop(); }
 
 void CSpaceInvaders::onLaunchEnemy() {
-  srand(time(NULL));
 
+  srand(time(NULL));
   int nPos = (rand() % m_oScreenSize.width()) - g_vars::gCannonSize.width();
   if (nPos < 0)
     nPos = 0;
@@ -134,21 +145,22 @@ void CSpaceInvaders::onLaunchEnemy() {
 
   int nColor = rand() % 3;
 
-  CAlien *pAlien = new CAlien(static_cast<EColor>(nColor));
+  m_pAlien = std::make_unique<CAlien>(static_cast<EColor>(nColor));
+  m_pAlien->setPos(nPos, 0);
 
-  pAlien->setPos(nPos, 0);
-
-  scene()->addItem(pAlien);
-  connect(pAlien, &CAlien::sigGameOver, this, &CSpaceInvaders::onGameOver);
-  connect(pAlien, &CAlien::sigDecreaseHealth, this,
+  connect(m_pAlien.get(), &CAlien::sigGameOver, this,
+          &CSpaceInvaders::onGameOver);
+  connect(m_pAlien.get(), &CAlien::sigDecreaseHealth, this,
           &CSpaceInvaders::onDecreaseHealth);
+
+  scene()->addItem(m_pAlien.release());
 }
 
 CSpaceInvaders::~CSpaceInvaders() {
 
-  if (m_pTimer->isActive()) {
+  if (m_pSp_InvTimer->isActive()) {
     stopTimer();
   }
 
-  delete m_pTimer;
+  m_pSp_InvTimer.reset();
 }

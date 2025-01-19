@@ -1,19 +1,23 @@
 
+#include "inc/spaceinvaders.h"
 #include <QApplication>
 #include <QScreen>
-#include "inc/spaceinvaders.h"
+#include <QVBoxLayout>
 #include <iostream>
+#include <memory>
 
-int main(int argc, char *argv[])
-{
-    QApplication app(argc, argv);
+int main(int argc, char *argv[]) {
+  QApplication app(argc, argv);
 
-    CSpaceInvaders *pGame = new CSpaceInvaders(qApp->screens()[0]->size());
+  QWidget window;
 
-    pGame->showFullScreen();
-    pGame->Run();
+  std::unique_ptr<CSpaceInvaders> pGame =
+      std::make_unique<CSpaceInvaders>(qApp->screens()[0]->size());
 
-    return app.exec();
+  pGame->showFullScreen();
+  pGame->Run();
 
-    return 0;
+  return app.exec();
+
+  return 0;
 }
