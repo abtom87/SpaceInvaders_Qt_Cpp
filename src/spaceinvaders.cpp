@@ -44,7 +44,7 @@ void CSpaceInvaders::Run() {
   scene()->addItem(m_pPoints.get());
 
   // The function connected with timer(createEnemy) is called every 1.5 seconds
-  startTimer(1500);
+  startTimer(1200);
 }
 
 void CSpaceInvaders::CheckPoints() {

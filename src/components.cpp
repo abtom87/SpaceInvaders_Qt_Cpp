@@ -122,13 +122,22 @@ void CAlien::SetColor(EColor ecol) {
 }
 
 void CAlien::onMove() {
+
+  // Ensure this object is in a valid scene
+  if (!scene()) {
+
+    return; // Safely exit if scene() is null
+  }
+
   setPos(x(), y() + 5);
 
   if (pos().y() >= (scene()->height() - g_vars::gCannonSize.height())) {
 
     scene()->removeItem(this);
     emit sigDecreaseHealth();
+
     deleteLater();
+    return;
   }
 
   QList<QGraphicsItem *> lstCollidingItems = collidingItems();
